@@ -21,6 +21,25 @@ namespace TestGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // Timing
+        double lastTenHertzUpdate = 0.0;
+
+        // Texture Variables
+        protected Texture2D[] hero;
+        protected Texture2D[] villain;
+        protected Texture2D levelBackground;
+        
+        // Animation Variables
+        Vector2 levelBackgroundPosition = new Vector2(0.0f, 0.0f);
+
+        Vector2 heroPosition = new Vector2(30.0f, 440.0f);
+        bool isHeroRunning = false;
+        bool drawAltHero = false;
+
+        Vector2 villainPosition = new Vector2(330.0f, 460.0f);
+        bool isVillainRunning = false;
+        bool drawAltVillain = false;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -50,6 +69,13 @@ namespace TestGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            levelBackground = Content.Load<Texture2D>("desert-background");
+            hero = new Texture2D[2];
+            hero[0] = Content.Load<Texture2D>("mario");
+            hero[1] = Content.Load<Texture2D>("mario-alt");
+            villain = new Texture2D[2];
+            villain[0] = Content.Load<Texture2D>("goomba");
+            villain[1] = Content.Load<Texture2D>("goomba-alt");
         }
 
         /// <summary>
@@ -73,6 +99,9 @@ namespace TestGame
                 this.Exit();
 
             // TODO: Add your update logic here
+            UpdateInputs();
+            UpdateSprite(graphics, gameTime);
+
 
             base.Update(gameTime);
         }
@@ -87,7 +116,154 @@ namespace TestGame
 
             // TODO: Add your drawing code here
 
+            // Begin sprite batch - to be done before drawing
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
+            
+            spriteBatch.Draw(levelBackground, levelBackgroundPosition, null, Color.White, 0.0f, Vector2.Zero, 2.3f, SpriteEffects.None, 0.0f);
+
+            if (IsTenHertzUpdateFrame(gameTime))
+            {
+                PerformTenHertzTasks(gameTime);
+            }
+
+            if (drawAltHero)
+            {
+                spriteBatch.Draw(hero[1], heroPosition, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(hero[0], heroPosition, Color.White);
+            }
+
+            if (drawAltVillain)
+            {
+                spriteBatch.Draw(villain[1], villainPosition, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(villain[0], villainPosition, Color.White);
+            }
+
+            // End Sprite Batch - to be done after all drawing is complete, but before call to base.Draw()
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
+
+        private bool IsTenHertzUpdateFrame(GameTime gameTime)
+        {
+            return ((gameTime.TotalGameTime.TotalSeconds - lastTenHertzUpdate) > 0.1);
+        }
+
+        private void PerformTenHertzTasks(GameTime gameTime)
+        {
+            // reset the time starting point
+            lastTenHertzUpdate = gameTime.TotalGameTime.TotalSeconds;
+
+            // set or lower the hero running animation flag
+            if (isHeroRunning)
+            {
+                drawAltHero = !drawAltHero;
+            }
+            else
+            {
+                drawAltHero = false;
+            }
+        }
+
+        public virtual void UpdateInputs()
+        {
+            isHeroRunning = false;
+
+            UpdateKeyboard();
+            UpdateGamePad();
+        }
+
+        public virtual void UpdateSprite(GraphicsDeviceManager graphics, GameTime gameTime)
+        {
+            float MaxX = ((float)graphics.GraphicsDevice.Viewport.Width) / 2.0f;
+            float MinX = ((float)graphics.GraphicsDevice.Viewport.Width) / 10.0f;
+
+            if (heroPosition.X > MaxX)
+            {
+                // leave the hero in place, move the texture instead
+                float difference = heroPosition.X - MaxX;
+                heroPosition.X = MaxX;
+                levelBackgroundPosition.X -= difference;
+                // TODO: When the background finishes scrolling out, 
+                // allow the hero to run to the end of the screen (but not past it)
+                if (levelBackgroundPosition.X < -levelBackground.Width)
+                {
+                    levelBackgroundPosition.X = -levelBackground.Width;
+                }
+            }
+            if (heroPosition.X < MinX)
+            {
+                float difference = MinX - heroPosition.X;
+                heroPosition.X = MinX;
+                levelBackgroundPosition.X += difference;
+                if (levelBackgroundPosition.X > 0.0)
+                {
+                    levelBackgroundPosition.X = 0.0f;
+                }
+            }
+        }
+
+        private void UpdateGamePad()
+        {
+            GamePadState pad1 = GamePad.GetState(PlayerIndex.One);
+
+            if (pad1.IsConnected && (pad1.DPad.Left == ButtonState.Pressed))
+            {
+                heroPosition.X -= 2.0f;
+                isHeroRunning = true;
+            }
+            if (pad1.IsConnected && (pad1.DPad.Right == ButtonState.Pressed))
+            {
+                heroPosition.X += 2.0f;
+                isHeroRunning = true;
+            }
+            /*
+            if (pad1.IsConnected && (pad1.DPad.Up == ButtonState.Pressed))
+            {
+                heroPosition.Y -= 2.0f;
+                isHeroRunning = true;
+            }
+            if (pad1.IsConnected && (pad1.DPad.Down == ButtonState.Pressed))
+            {
+                heroPosition.Y += 2.0f;
+                isHeroRunning = true;
+            }
+             */
+        }
+
+        private void UpdateKeyboard()
+        {
+            KeyboardState keys = Keyboard.GetState();
+
+            if (keys.IsKeyDown(Keys.Left))
+            {
+                heroPosition.X -= 2.0f;
+                isHeroRunning = true;
+            }
+            if (keys.IsKeyDown(Keys.Right))
+            {
+                heroPosition.X += 2.0f;
+                isHeroRunning = true;
+            }
+            /*
+            if (keys.IsKeyDown(Keys.Up))
+            {
+                heroPosition.Y -= 2.0f;
+                isHeroRunning = true;
+            }
+            if (keys.IsKeyDown(Keys.Down))
+            {
+                heroPosition.Y += 2.0f;
+                isHeroRunning = true;
+            }
+             */
+        }
+
     }
 }
