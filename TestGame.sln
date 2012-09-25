@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGame", "TestGame\TestGame.csproj", "{5492CF19-2946-4836-8764-F005E8376CCA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGame-MainMenu", "TestGame-MainMenu\TestGame-MainMenu.csproj", "{CE23353F-0D03-4F15-8E7E-F9D88D0CC474}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{AF6E5487-55F1-45A4-830C-542E450DA87D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +19,18 @@ Global
 		{5492CF19-2946-4836-8764-F005E8376CCA}.Release|x86.Build.0 = Release|x86
 		{BA46EBA5-929D-4965-90BC-4232D6DB287E}.Debug|x86.ActiveCfg = Debug|x86
 		{BA46EBA5-929D-4965-90BC-4232D6DB287E}.Release|x86.ActiveCfg = Release|x86
+		{CE23353F-0D03-4F15-8E7E-F9D88D0CC474}.Debug|x86.ActiveCfg = Debug|x86
+		{CE23353F-0D03-4F15-8E7E-F9D88D0CC474}.Debug|x86.Build.0 = Debug|x86
+		{CE23353F-0D03-4F15-8E7E-F9D88D0CC474}.Release|x86.ActiveCfg = Release|x86
+		{CE23353F-0D03-4F15-8E7E-F9D88D0CC474}.Release|x86.Build.0 = Release|x86
+		{5D354312-9030-4721-8B2C-8AC2A2A373CF}.Debug|x86.ActiveCfg = Debug|x86
+		{5D354312-9030-4721-8B2C-8AC2A2A373CF}.Release|x86.ActiveCfg = Release|x86
+		{AF6E5487-55F1-45A4-830C-542E450DA87D}.Debug|x86.ActiveCfg = Debug|x86
+		{AF6E5487-55F1-45A4-830C-542E450DA87D}.Debug|x86.Build.0 = Debug|x86
+		{AF6E5487-55F1-45A4-830C-542E450DA87D}.Release|x86.ActiveCfg = Release|x86
+		{AF6E5487-55F1-45A4-830C-542E450DA87D}.Release|x86.Build.0 = Release|x86
+		{AE364A48-7139-4AB5-AEC9-74C3ABD0EA52}.Debug|x86.ActiveCfg = Debug|x86
+		{AE364A48-7139-4AB5-AEC9-74C3ABD0EA52}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
