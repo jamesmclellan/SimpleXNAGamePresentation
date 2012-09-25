@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+
+
 namespace TestGame
 {
     /// <summary>
@@ -32,13 +34,17 @@ namespace TestGame
         // Animation Variables
         Vector2 levelBackgroundPosition = new Vector2(0.0f, 0.0f);
 
+        bool drawHero = true;
         Vector2 heroPosition = new Vector2(30.0f, 440.0f);
         bool isHeroRunning = false;
         bool drawAltHero = false;
+        Rectangle heroRectangle;
 
+        bool drawVillain = true;
         Vector2 villainPosition = new Vector2(330.0f, 460.0f);
         bool isVillainRunning = false;
         bool drawAltVillain = false;
+        Rectangle villainRectangle;
 
         public Game1()
         {
@@ -76,6 +82,10 @@ namespace TestGame
             villain = new Texture2D[2];
             villain[0] = Content.Load<Texture2D>("goomba");
             villain[1] = Content.Load<Texture2D>("goomba-alt");
+
+            heroRectangle = new Rectangle((int)heroPosition.X, (int)heroPosition.Y, hero[0].Width, hero[0].Height);
+            villainRectangle = new Rectangle((int)villainPosition.X, (int)villainPosition.Y, villain[0].Width, villain[0].Height);
+
         }
 
         /// <summary>
@@ -102,6 +112,16 @@ namespace TestGame
             UpdateInputs();
             UpdateSprite(graphics, gameTime);
 
+            // Perform collision detection
+            heroRectangle.X = (int) heroPosition.X;
+            heroRectangle.Y = (int)heroPosition.Y;
+            villainRectangle.X = (int)villainPosition.X;
+            villainRectangle.Y = (int)villainPosition.Y;
+
+            if(heroRectangle.Intersects(villainRectangle))
+            {
+                drawVillain = false;
+            }
 
             base.Update(gameTime);
         }
@@ -119,29 +139,36 @@ namespace TestGame
             // Begin sprite batch - to be done before drawing
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend);
             
-            spriteBatch.Draw(levelBackground, levelBackgroundPosition, null, Color.White, 0.0f, Vector2.Zero, 2.3f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(levelBackground, levelBackgroundPosition, null, Color.White, 0.0f, 
+                Vector2.Zero, 2.3f, SpriteEffects.None, 0.0f);
 
             if (IsTenHertzUpdateFrame(gameTime))
             {
                 PerformTenHertzTasks(gameTime);
             }
 
-            if (drawAltHero)
+            if (drawHero)
             {
-                spriteBatch.Draw(hero[1], heroPosition, Color.White);
-            }
-            else
-            {
-                spriteBatch.Draw(hero[0], heroPosition, Color.White);
+                if (drawAltHero)
+                {
+                    spriteBatch.Draw(hero[1], heroPosition, Color.White);
+                }
+                else
+                {
+                    spriteBatch.Draw(hero[0], heroPosition, Color.White);
+                }
             }
 
-            if (drawAltVillain)
+            if (drawVillain)
             {
-                spriteBatch.Draw(villain[1], villainPosition, Color.White);
-            }
-            else
-            {
-                spriteBatch.Draw(villain[0], villainPosition, Color.White);
+                if (drawAltVillain)
+                {
+                    spriteBatch.Draw(villain[1], villainPosition, Color.White);
+                }
+                else
+                {
+                    spriteBatch.Draw(villain[0], villainPosition, Color.White);
+                }
             }
 
             // End Sprite Batch - to be done after all drawing is complete, but before call to base.Draw()
@@ -190,7 +217,6 @@ namespace TestGame
                 float difference = heroPosition.X - MaxX;
                 heroPosition.X = MaxX;
                 levelBackgroundPosition.X -= difference;
-                // TODO: When the background finishes scrolling out, 
                 // allow the hero to run to the end of the screen (but not past it)
                 if (levelBackgroundPosition.X < -levelBackground.Width)
                 {
