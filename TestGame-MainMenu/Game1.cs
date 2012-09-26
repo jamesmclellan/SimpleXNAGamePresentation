@@ -163,7 +163,8 @@ namespace TestGame_MainMenu
 
                 // draw the text
                 Vector2 menuMeasurements = nashville.MeasureString(menuText[index]);
-                Vector2 menuLocation = new Vector2(menuTextLocation[index].X - (menuMeasurements.X / 2.0f), menuTextLocation[index].Y);
+                Vector2 menuLocation = new Vector2(menuTextLocation[index].X - (menuMeasurements.X / 2.0f), 
+                    menuTextLocation[index].Y);
                 spriteBatch.DrawString(nashville, menuText[index], menuLocation, fontColor);
             }
 

@@ -83,8 +83,10 @@ namespace TestGame
             villain[0] = Content.Load<Texture2D>("goomba");
             villain[1] = Content.Load<Texture2D>("goomba-alt");
 
-            heroRectangle = new Rectangle((int)heroPosition.X, (int)heroPosition.Y, hero[0].Width, hero[0].Height);
-            villainRectangle = new Rectangle((int)villainPosition.X, (int)villainPosition.Y, villain[0].Width, villain[0].Height);
+            heroRectangle = new Rectangle((int)heroPosition.X, (int)heroPosition.Y, hero[0].Width, 
+                hero[0].Height);
+            villainRectangle = new Rectangle((int)villainPosition.X, (int)villainPosition.Y, 
+                villain[0].Width, villain[0].Height);
 
         }
 
